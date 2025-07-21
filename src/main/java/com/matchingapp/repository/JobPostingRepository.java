@@ -29,9 +29,8 @@ public interface JobPostingRepository extends JpaRepository<JobPosting, Long> {
 	// Enhanced search methods
 	@Query("""
 				SELECT jp FROM JobPosting jp
-				WHERE jp.status = '公開'
-				AND (
-					:keyword IS NULL OR jp.title LIKE CONCAT('%', :keyword, '%')
+				WHERE
+				(:keyword IS NULL OR jp.title LIKE CONCAT('%', :keyword, '%')
 					OR jp.description LIKE CONCAT('%', :keyword, '%')
 					OR jp.nursery.name LIKE CONCAT('%', :keyword, '%')
 				)

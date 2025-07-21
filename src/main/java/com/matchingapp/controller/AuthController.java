@@ -66,11 +66,20 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/dashboard")
-    public String dashboard() {
-        // Spring Security will handle redirection based on roles
-        return "dashboard";
-    }
+    // @GetMapping("/dashboard")
+    // public String dashboard() {
+    //     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    //     if (authentication != null && authentication.isAuthenticated()) {
+    //         if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_NURSE"))) {
+    //             return "dashboard";
+    //         } else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_NURSERY"))) {
+    //             return "dashboard";
+    //         } else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+    //             return "redirect:/admin/dashboard";
+    //         }
+    //     }
+    //     return "redirect:/login";
+    // }
 
     @GetMapping("/forgot-password")
     public String showForgotPasswordForm() {

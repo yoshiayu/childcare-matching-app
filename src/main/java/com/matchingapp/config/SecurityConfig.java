@@ -47,13 +47,13 @@ public class SecurityConfig {
                     .map(user -> org.springframework.security.core.userdetails.User.builder()
                             .username(user.getEmail())
                             .password(user.getPassword())
-                            .roles(user.getRole())
+                            .authorities("ROLE_" + user.getRole())
                             .build())
                     .or(() -> nurseryRepository.findByEmail(email)
                             .map(nursery -> org.springframework.security.core.userdetails.User.builder()
                                     .username(nursery.getEmail())
                                     .password(nursery.getPassword())
-                                    .roles("NURSERY") // Assuming NURSERY role for nurseries
+                                    .authorities("ROLE_NURSERY")
                                     .build()))
                     .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
         };

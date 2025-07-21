@@ -24,12 +24,12 @@
         </div>
 
         <h2>通知設定</h2>
-        <button id="subscribeButton" class="button">プッシュ通知を有効にする</button>
-        <button id="unsubscribeButton" class="button danger">プッシュ通知を無効にする</button>
+        <!-- <button id="subscribeButton" class="button">プッシュ通知を有効にする</button>
+        <button id="unsubscribeButton" class="button danger">プッシュ通知を無効にする</button> -->
 
     </div>
 
-    <script th:inline="javascript">
+    <!-- <script th:inline="javascript">
         const subscribeButton = document.getElementById('subscribeButton');
         const unsubscribeButton = document.getElementById('unsubscribeButton');
         const vapidPublicKey = /*[[${@pushSubscriptionController.getVapidPublicKey()}]]*/ 'default_public_key';
@@ -106,6 +106,6 @@
                 });
             }
         });
-    </script>
+    </script> -->
 </body>
 </html>

@@ -59,7 +59,10 @@
             <tbody>
                 <tr th:each="jobPosting : ${jobPostings.content}">
                     <td th:text="${jobPosting.title}"></td>
-                    <td th:text="${jobPosting.nursery.name}"></td>
+                    <td>
+                        <span th:if="${jobPosting.nursery != null}" th:text="${jobPosting.nursery.name}"></span>
+                        <span th:unless="${jobPosting.nursery != null}">不明</span>
+                    </td>
                     <td th:text="${jobPosting.area}"></td>
                     <td th:text="${jobPosting.salary}"></td>
                     <td th:text="${jobPosting.workTime}"></td>

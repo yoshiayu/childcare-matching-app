@@ -10,8 +10,16 @@
         <h1>求人詳細</h1>
 
         <h2><span th:text="${jobPosting.title}"></span></h2>
-        <p><strong>園名:</strong> <span th:text="${jobPosting.nursery.name}"></span></p>
-        <p><strong>保育方針:</strong> <span th:text="${jobPosting.nursery.philosophy}"></span></p>
+        <p>
+            <strong>園名:</strong>
+            <span th:if="${jobPosting.nursery != null}" th:text="${jobPosting.nursery.name}"></span>
+            <span th:unless="${jobPosting.nursery != null}">不明</span>
+        </p>
+        <p>
+            <strong>保育方針:</strong>
+            <span th:if="${jobPosting.nursery != null}" th:text="${jobPosting.nursery.philosophy}"></span>
+            <span th:unless="${jobPosting.nursery != null}">不明</span>
+        </p>
         <p><strong>勤務地:</strong> <span th:text="${jobPosting.area}"></span></p>
         <p><strong>勤務時間:</strong> <span th:text="${jobPosting.workTime}"></span></p>
         <p><strong>給与:</strong> <span th:text="${jobPosting.salary}"></span>円</p>
@@ -19,7 +27,10 @@
 
         <h3>保育園の場所</h3>
         <div id="map" style="height: 400px; width: 100%;"></div>
-        <p>緯度: <span th:text="${jobPosting.nursery.latitude}"></span>, 経度: <span th:text="${jobPosting.nursery.longitude}"></span></p>
+        <p>
+            緯度: <span th:if="${jobPosting.nursery != null}" th:text="${jobPosting.nursery.latitude}"></span><span th:unless="${jobPosting.nursery != null}">不明</span>,
+            経度: <span th:if="${jobPosting.nursery != null}" th:text="${jobPosting.nursery.longitude}"></span><span th:unless="${jobPosting.nursery != null}">不明</span>
+        </p>
 
         <div class="button-group">
             <div sec:authorize="hasRole('NURSE')">

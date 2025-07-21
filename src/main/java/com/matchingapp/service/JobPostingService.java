@@ -46,26 +46,6 @@ public class JobPostingService {
 		return jobPostingRepository.searchJobPostings(keyword, area, salaryMin, philosophyKeyword, pageable);
 	}
 
-	/**
-	 * ✅ Controller から呼ばれるバージョン（area, salaryMin, workTime だけで検索）
-	 */
-	public List<JobPosting> searchJobPostings(String area, Integer salaryMin, String workTime) {
-		// 条件に合わせて、独自のRepositoryメソッドを呼び出す（例: findByAreaAndSalaryGreaterThanEqualAndWorkTime）
-		if (area == null && salaryMin == null && workTime == null) {
-			return jobPostingRepository.findAll();
-		} else if (area != null && salaryMin == null && workTime == null) {
-			return jobPostingRepository.findByAreaContaining(area);
-		} else if (area != null && salaryMin != null && workTime == null) {
-			return jobPostingRepository.findByAreaContainingAndSalaryGreaterThanEqual(area, salaryMin);
-		} else if (area != null && salaryMin != null && workTime != null) {
-			return jobPostingRepository.findByAreaContainingAndSalaryGreaterThanEqualAndWorkTimeContaining(area,
-					salaryMin, workTime);
-		} else {
-			// 必要に応じて追加条件
-			return jobPostingRepository.findAll(); // フォールバック
-		}
-	}
-
 	public Optional<JobPosting> getJobPostingById(Long id) {
 		return jobPostingRepository.findById(id);
 	}

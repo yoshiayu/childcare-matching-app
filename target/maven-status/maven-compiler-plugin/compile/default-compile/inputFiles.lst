@@ -2,6 +2,7 @@
 /Users/ayumuyoshinaga/childcare-matching-app/src/main/java/com/matchingapp/config/SecurityConfig.java
 /Users/ayumuyoshinaga/childcare-matching-app/src/main/java/com/matchingapp/controller/AdminController.java
 /Users/ayumuyoshinaga/childcare-matching-app/src/main/java/com/matchingapp/controller/AuthController.java
+/Users/ayumuyoshinaga/childcare-matching-app/src/main/java/com/matchingapp/controller/DashboardController.java
 /Users/ayumuyoshinaga/childcare-matching-app/src/main/java/com/matchingapp/controller/JobPostingController.java
 /Users/ayumuyoshinaga/childcare-matching-app/src/main/java/com/matchingapp/controller/NurseryController.java
 /Users/ayumuyoshinaga/childcare-matching-app/src/main/java/com/matchingapp/controller/PushSubscriptionController.java

@@ -13,10 +13,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Collections;
+import com.matchingapp.entity.UserQualification;
 
 @Controller
 @RequestMapping("/nurse")
@@ -35,12 +38,24 @@ public class UserController {
     }
 
     @GetMapping("/my-page")
-    public String showMyPage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+    public String showMyPage(@AuthenticationPrincipal UserDetails userDetails, Model model, RedirectAttributes redirectAttributes) {
+        if (userDetails == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "ログイン情報が取得できませんでした。再度ログインしてください。");
+            return "redirect:/dashboard";
+        }
         User currentUser = userService.getUserByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElse(null);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "ユーザー情報が見つかりません。再度ログインしてください。");
+            return "redirect:/dashboard";
+        }
         model.addAttribute("user", currentUser);
-        model.addAttribute("userQualifications", userService.getUserQualifications(currentUser));
-        model.addAttribute("workExperiences", userService.getUserWorkExperiences(currentUser));
+        List<UserQualification> qualifications = userService.getUserQualifications(currentUser);
+        model.addAttribute("userQualifications", qualifications != null ? qualifications : Collections.emptyList());
+        List<WorkExperience> workExperiences = userService.getUserWorkExperiences(currentUser);
+        model.addAttribute("workExperiences", workExperiences != null ? workExperiences : Collections.emptyList());
+        model.addAttribute("favoriteJobPostings", favoriteService.getFavoriteJobPostingsByUser(currentUser));
+        model.addAttribute("interviews", interviewService.getInterviewsForNurse(currentUser));
         return "nurse_my_page";
     }
 
@@ -125,20 +140,31 @@ public class UserController {
             @RequestParam(value = "area", required = false) String area,
             @RequestParam(value = "salaryMin", required = false) Integer salaryMin,
             @RequestParam(value = "philosophyKeyword", required = false) String philosophyKeyword,
-            @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy,
-            @RequestParam(value = "sortOrder", defaultValue = "desc") String sortOrder,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            Model model) {
-        Page<com.matchingapp.entity.JobPosting> jobPostings = jobPostingService.searchJobPostings(keyword, area, salaryMin, philosophyKeyword, sortBy, sortOrder, page, size);
-        model.addAttribute("jobPostings", jobPostings);
+            @RequestParam(value = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+            @RequestParam(value = "sortOrder", required = false, defaultValue = "desc") String sortOrder,
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size,
+            Model model, RedirectAttributes redirectAttributes) {
+        try {
+            Page<com.matchingapp.entity.JobPosting> jobPostings = jobPostingService.searchJobPostings(keyword, area, salaryMin, philosophyKeyword, sortBy, sortOrder, page, size);
+            model.addAttribute("jobPostings", jobPostings);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "求人情報の取得中にエラーが発生しました。");
+            return "redirect:/dashboard";
+        }
         return "nurse_job_search";
     }
 
     @GetMapping("/job-postings/{id}")
-    public String showJobPostingDetail(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails, Model model) {
+    public String showJobPostingDetail(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails, Model model, RedirectAttributes redirectAttributes) {
         com.matchingapp.entity.JobPosting jobPosting = jobPostingService.getJobPostingById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Job Posting not found"));
+
+        if (jobPosting.getNursery() == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "この求人票の保育園情報が見つかりません。");
+            return "redirect:/nurse/job-postings";
+        }
+
         model.addAttribute("jobPosting", jobPosting);
 
         if (userDetails != null) {

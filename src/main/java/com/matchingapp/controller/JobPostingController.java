@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 @Controller
 @RequestMapping("/job-postings")
@@ -34,8 +35,9 @@ public class JobPostingController {
             @RequestParam(value = "salaryMin", required = false) Integer salaryMin,
             @RequestParam(value = "workTime", required = false) String workTime,
             Model model) {
-        List<JobPosting> jobPostings = jobPostingService.searchJobPostings(area, salaryMin, workTime);
-        model.addAttribute("jobPostings", jobPostings);
+        // Use the primary search method with default pagination and sorting
+        Page<JobPosting> jobPostingsPage = jobPostingService.searchJobPostings(null, area, salaryMin, null, "createdAt", "desc", 0, 100);
+        model.addAttribute("jobPostings", jobPostingsPage.getContent());
         return "job_posting_list";
     }
 
