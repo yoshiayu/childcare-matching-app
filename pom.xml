@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.matchingapp</groupId>
+    <artifactId>childcare-matching-app</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>childcare-matching-app</name>
+    <description>Childcare Matching App</description>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.4</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <properties>
+        <java.version>17</java.version>
+        <lombok.version>1.18.34</lombok.version>
+    </properties>
+
+    <dependencies>
+        <!-- Spring Boot Starters -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
+        <!-- Thymeleaf Extras for Spring Security -->
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
+        </dependency>
+
+        <!-- WebPush -->
+        <dependency>
+            <groupId>nl.martijndwars</groupId>
+            <artifactId>web-push</artifactId>
+            <version>5.1.2</version>
+        </dependency>
+
+        <!-- BouncyCastle for WebPush Encryption -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.70</version>
+        </dependency>
+
+        <!-- Jose4j for WebPush JWT/JWE -->
+        <dependency>
+            <groupId>org.bitbucket.b_c</groupId>
+            <artifactId>jose4j</artifactId>
+            <version>0.9.3</version>
+        </dependency>
+
+        <!-- Apache HttpClient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version>
+        </dependency>
+
+        <!-- JSON Handling -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20231013</version>
+        </dependency>
+
+        <!-- DB Drivers -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.matchingapp.ChildcareMatchingAppApplication</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.12.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <fork>true</fork>
+                    <executable>/opt/homebrew/opt/openjdk@17/bin/javac</executable>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>0.2.0</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+
+<!--<project xmlns="http://maven.apache.org/POM/4.0.0"-->
+<!--	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+<!--	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">-->
+<!--	<modelVersion>4.0.0</modelVersion>-->
+
+<!--	<parent>-->
+<!--		<groupId>org.springframework.boot</groupId>-->
+<!--		<artifactId>spring-boot-starter-parent</artifactId>-->
+<!--		<version>3.2.0</version>-->
+<!--		<relativePath />  lookup parent from repository -->
+<!--	</parent>-->
+
+<!--	<groupId>com.matchingapp</groupId>-->
+<!--	<artifactId>childcare-matching-app</artifactId>-->
+<!--	<version>0.0.1-SNAPSHOT</version>-->
+<!--	<name>childcare-matching-app</name>-->
+<!--	<description>Childcare Matching Application</description>-->
+
+<!--	<properties>-->
+<!--		<java.version>17</java.version>-->
+<!--		<lombok.version>1.18.30</lombok.version>-->
+<!--	</properties>-->
+
+<!--	<dependencies>-->
+<!--	 Spring Boot Dependencies -->
+<!--	<dependency>-->
+<!--		<groupId>org.springframework.boot</groupId>-->
+<!--		<artifactId>spring-boot-starter-web</artifactId>-->
+<!--	</dependency>-->
+<!--	<dependency>-->
+<!--		<groupId>org.springframework.boot</groupId>-->
+<!--		<artifactId>spring-boot-starter-data-jpa</artifactId>-->
+<!--	</dependency>-->
+<!--	<dependency>-->
+<!--		<groupId>org.springframework.boot</groupId>-->
+<!--		<artifactId>spring-boot-starter-security</artifactId>-->
+<!--	</dependency>-->
+<!--	<dependency>-->
+<!--		<groupId>org.springframework.boot</groupId>-->
+<!--		<artifactId>spring-boot-starter-thymeleaf</artifactId>-->
+<!--	</dependency>-->
+<!--	<dependency>-->
+<!--		<groupId>org.thymeleaf.extras</groupId>-->
+<!--		<artifactId>thymeleaf-extras-springsecurity6</artifactId>-->
+<!--	</dependency>-->
+
+<!--	 WebPush, HttpClient, BouncyCastle -->
+<!--	<dependency>-->
+<!--		<groupId>nl.martijndwars</groupId>-->
+<!--		<artifactId>web-push</artifactId>-->
+<!--		<version>5.1.2</version>-->
+<!--	</dependency>-->
+<!--	<dependency>-->
+<!--		<groupId>org.apache.httpcomponents</groupId>-->
+<!--		<artifactId>httpclient</artifactId>-->
+<!--		<version>4.5.13</version>-->
+<!--	</dependency>-->
+<!--	<dependency>-->
+<!--		<groupId>org.bouncycastle</groupId>-->
+<!--		<artifactId>bcprov-jdk15on</artifactId>-->
+<!--		<version>1.70</version>-->
+<!--	</dependency>-->
+
+<!--	 JSON -->
+<!--	<dependency>-->
+<!--		<groupId>org.json</groupId>-->
+<!--		<artifactId>json</artifactId>-->
+<!--		<version>20231013</version>-->
+<!--	</dependency>-->
+
+<!--	 DB Drivers -->
+<!--	<dependency>-->
+<!--		<groupId>org.postgresql</groupId>-->
+<!--		<artifactId>postgresql</artifactId>-->
+<!--		<scope>runtime</scope>-->
+<!--	</dependency>-->
+<!--	<dependency>-->
+<!--		<groupId>com.h2database</groupId>-->
+<!--		<artifactId>h2</artifactId>-->
+<!--		<scope>runtime</scope>-->
+<!--	</dependency>-->
+
+<!--	 Lombok -->
+<!--	<dependency>-->
+<!--		<groupId>org.projectlombok</groupId>-->
+<!--		<artifactId>lombok</artifactId>-->
+<!--		<version>1.18.30</version>-->
+<!--		<scope>provided</scope>-->
+<!--	</dependency>-->
+
+<!--	 Test -->
+<!--	<dependency>-->
+<!--		<groupId>org.springframework.boot</groupId>-->
+<!--		<artifactId>spring-boot-starter-test</artifactId>-->
+<!--		<scope>test</scope>-->
+<!--	</dependency>-->
+<!--	<dependency>-->
+<!--		<groupId>org.springframework.security</groupId>-->
+<!--		<artifactId>spring-security-test</artifactId>-->
+<!--		<scope>test</scope>-->
+<!--	</dependency>-->
+<!--</dependencies>-->
+<!--s>-->
+
+<!--	<build>-->
+<!--		<plugins>-->
+<!--			<plugin>-->
+<!--				<groupId>org.springframework.boot</groupId>-->
+<!--				<artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--				<configuration>-->
+<!--					<excludes>-->
+<!--						<exclude>-->
+<!--							<groupId>org.projectlombok</groupId>-->
+<!--							<artifactId>lombok</artifactId>-->
+<!--						</exclude>-->
+<!--					</excludes>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
+<!--			<plugin>-->
+<!--				<groupId>org.apache.maven.plugins</groupId>-->
+<!--				<artifactId>maven-compiler-plugin</artifactId>-->
+<!--				<version>3.12.1</version>-->
+<!--				<configuration>-->
+<!--					<release>${java.version}</release>-->
+<!--					<fork>true</fork>-->
+<!--					<annotationProcessorPaths>-->
+<!--						<path>-->
+<!--							<groupId>org.projectlombok</groupId>-->
+<!--							<artifactId>lombok</artifactId>-->
+<!--							<version>${lombok.version}</version>-->
+<!--						</path>-->
+<!--					</annotationProcessorPaths>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
+<!--		</plugins>-->
+<!--	</build>-->
+
+<!--	 JitPack Repository for webpush-java -->
+<!--	<repositories>-->
+<!--		<repository>-->
+<!--			<id>jitpack.io</id>-->
+<!--			<url>https://jitpack.io</url>-->
+<!--		</repository>-->
+<!--	</repositories>-->
+
+<!--</project>-->

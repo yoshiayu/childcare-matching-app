@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>管理者ダッシュボード - 保育マッチングアプリ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>管理者ダッシュボード</h1>
+        <p>ようこそ、<span sec:authentication="name"></span>さん！ (管理者)</p>
+
+        <div class="main-nav">
+            <a th:href="@{/admin/users}" class="button">ユーザー管理</a>
+            <a th:href="@{/admin/job-postings/review}" class="button">求人票審査</a>
+            <a th:href="@{/admin/statistics}" class="button">統計情報</a>
+            <a th:href="@{/admin/notices}" class="button">お知らせ管理</a>
+            <a th:href="@{/admin/inquiries}" class="button">問い合わせ管理</a>
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <button type="submit" class="button secondary">ログアウト</button>
+            </form>
+        </div>
+
+        <h2>概要</h2>
+        <p>登録保育士数: <span th:text="${totalUsers}"></span></p>
+        <p>登録保育園数: <span th:text="${totalNurseries}"></span></p>
+        <p>審査待ち求人票数: <span th:text="${pendingJobPostings}"></span></p>
+
+    </div>
+</body>
+</html>

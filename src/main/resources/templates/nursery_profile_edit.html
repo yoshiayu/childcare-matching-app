@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>保育園情報編集 - 保育マッチングアプリ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>保育園情報編集</h1>
+        <form th:action="@{/nursery/profile/edit}" method="post">
+            <p>
+                <label for="name">園名:</label>
+                <input type="text" id="name" name="name" th:value="${nursery.name}" required>
+            </p>
+            <p>
+                <label for="address">所在地:</label>
+                <input type="text" id="address" name="address" th:value="${nursery.address}">
+            </p>
+            <p>
+                <label for="philosophy">保育方針:</label>
+                <textarea id="philosophy" name="philosophy" rows="5" th:text="${nursery.philosophy}"></textarea>
+            </p>
+            <div class="button-group">
+                <button type="submit">更新</button>
+                <a th:href="@{/nursery/my-page}" class="button secondary">キャンセル</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>求人管理 - 保育マッチングアプリ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>求人管理</h1>
+        <p>あなたの保育園の求人票を管理します。</p>
+
+        <div th:if="${successMessage}" class="success-message" th:text="${successMessage}"></div>
+
+        <div class="button-group">
+            <a th:href="@{/nursery/job-postings/new}" class="button">新しい求人票を作成</a>
+        </div>
+
+        <h2>求人票一覧</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>タイトル</th>
+                    <th>勤務地</th>
+                    <th>給与</th>
+                    <th>ステータス</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="jobPosting : ${jobPostings}">
+                    <td th:text="${jobPosting.title}"></td>
+                    <td th:text="${jobPosting.area}"></td>
+                    <td th:text="${jobPosting.salary}"></td>
+                    <td th:text="${jobPosting.status}"></td>
+                    <td>
+                        <a th:href="@{/nursery/job-postings/{id}/edit(id=${jobPosting.id})}" class="button secondary">編集</a>
+                        <form th:action="@{/nursery/job-postings/{id}/toggle-status(id=${jobPosting.id})}" method="post" style="display:inline;">
+                            <input type="hidden" name="status" th:value="${jobPosting.status == '公開' ? '非公開' : '公開'}">
+                            <button type="submit" class="button" th:classappend="${jobPosting.status == '公開' ? 'danger' : 'secondary'}" th:text="${jobPosting.status == '公開' ? '非公開にする' : '公開する'}"></button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(jobPostings)}">
+                    <td colspan="5">求人票がありません。</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="button-group">
+            <a th:href="@{/dashboard}" class="button secondary">ダッシュボードに戻る</a>
+        </div>
+    </div>
+</body>
+</html>

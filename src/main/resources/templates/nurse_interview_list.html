@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>面談依頼一覧 - 保育マッチングアプリ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>面談依頼一覧</h1>
+        <p>あなたへの面談依頼の一覧です。</p>
+
+        <div th:if="${successMessage}" class="success-message" th:text="${successMessage}"></div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>保育園名</th>
+                    <th>面談希望日</th>
+                    <th>メッセージ</th>
+                    <th>ステータス</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="interview : ${interviews}">
+                    <td th:text="${interview.nursery.name}"></td>
+                    <td th:text="${interview.interviewDate}"></td>
+                    <td th:text="${interview.message}"></td>
+                    <td th:text="${interview.status}"></td>
+                    <td>
+                        <div th:if="${interview.status == '未承諾'}">
+                            <form th:action="@{/nurse/interviews/{id}/accept(id=${interview.id})}" method="post" style="display:inline;">
+                                <button type="submit" class="button">承諾</button>
+                            </form>
+                            <form th:action="@{/nurse/interviews/{id}/decline(id=${interview.id})}" method="post" style="display:inline;">
+                                <button type="submit" class="button danger">辞退</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(interviews)}">
+                    <td colspan="5">面談依頼はありません。</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="button-group">
+            <a th:href="@{/dashboard}" class="button secondary">ダッシュボードに戻る</a>
+        </div>
+    </div>
+</body>
+</html>

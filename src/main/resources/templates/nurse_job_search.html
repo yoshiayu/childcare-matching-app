@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>求人検索 - 保育マッチングアプリ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>求人検索</h1>
+
+        <form th:action="@{/nurse/job-postings}" method="get" class="filter-form">
+            <div>
+                <label for="keyword">キーワード:</label>
+                <input type="text" id="keyword" name="keyword" th:value="${param.keyword}" placeholder="求人名、説明、園名など">
+            </div>
+            <div>
+                <label for="area">勤務地:</label>
+                <input type="text" id="area" name="area" th:value="${param.area}">
+            </div>
+            <div>
+                <label for="salaryMin">最低給与:</label>
+                <input type="number" id="salaryMin" name="salaryMin" th:value="${param.salaryMin}">
+            </div>
+            <div>
+                <label for="philosophyKeyword">保育方針キーワード:</label>
+                <input type="text" id="philosophyKeyword" name="philosophyKeyword" th:value="${param.philosophyKeyword}">
+            </div>
+            <div>
+                <label for="sortBy">並び替え:</label>
+                <select id="sortBy" name="sortBy">
+                    <option value="createdAt" th:selected="${param.sortBy == 'createdAt'}">新着順</option>
+                    <option value="salary" th:selected="${param.sortBy == 'salary'}">給与順</option>
+                    <option value="area" th:selected="${param.sortBy == 'area'}">勤務地順</option>
+                </select>
+            </div>
+            <div>
+                <label for="sortOrder">順序:</label>
+                <select id="sortOrder" name="sortOrder">
+                    <option value="desc" th:selected="${param.sortOrder == 'desc'}">降順</option>
+                    <option value="asc" th:selected="${param.sortOrder == 'asc'}">昇順</option>
+                </select>
+            </div>
+            <button type="submit" class="button">検索</button>
+        </form>
+
+        <h2>求人一覧</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>求人名</th>
+                    <th>園名</th>
+                    <th>勤務地</th>
+                    <th>給与</th>
+                    <th>勤務時間</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="jobPosting : ${jobPostings.content}">
+                    <td th:text="${jobPosting.title}"></td>
+                    <td th:text="${jobPosting.nursery.name}"></td>
+                    <td th:text="${jobPosting.area}"></td>
+                    <td th:text="${jobPosting.salary}"></td>
+                    <td th:text="${jobPosting.workTime}"></td>
+                    <td>
+                        <a th:href="@{/nurse/job-postings/{id}(id=${jobPosting.id})}" class="button secondary">詳細</a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(jobPostings.content)}">
+                    <td colspan="6">求人が見つかりませんでした。</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <a th:if="${jobPostings.hasPrevious()}" th:href="@{/nurse/job-postings(page=${jobPostings.number - 1}, keyword=${param.keyword}, area=${param.area}, salaryMin=${param.salaryMin}, philosophyKeyword=${param.philosophyKeyword}, sortBy=${param.sortBy}, sortOrder=${param.sortOrder})}">前へ</a>
+            <span th:each="i : ${#numbers.sequence(0, jobPostings.totalPages - 1)}">
+                <a th:if="${i != jobPostings.number}" th:href="@{/nurse/job-postings(page=${i}, keyword=${param.keyword}, area=${param.area}, salaryMin=${param.salaryMin}, philosophyKeyword=${param.philosophyKeyword}, sortBy=${param.sortBy}, sortOrder=${param.sortOrder})}" th:text="${i + 1}"></a>
+                <span th:if="${i == jobPostings.number}" class="current-page" th:text="${i + 1}"></span>
+            </span>
+            <a th:if="${jobPostings.hasNext()}" th:href="@{/nurse/job-postings(page=${jobPostings.number + 1}, keyword=${param.keyword}, area=${param.area}, salaryMin=${param.salaryMin}, philosophyKeyword=${param.philosophyKeyword}, sortBy=${param.sortBy}, sortOrder=${param.sortOrder})}">次へ</a>
+        </div>
+
+        <div class="button-group">
+            <a th:href="@{/dashboard}" class="button secondary">ダッシュボードに戻る</a>
+        </div>
+    </div>
+</body>
+</html>

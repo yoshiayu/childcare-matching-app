@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${jobPosting.id == null ? '求人票新規作成' : '求人票編集'}"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <h1 th:text="${jobPosting.id == null ? '求人票新規作成' : '求人票編集'}"></h1>
+
+        <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></div>
+
+        <form th:action="${jobPosting.id == null ? '/nursery/job-postings' : '/nursery/job-postings/' + jobPosting.id + '/update'}" method="post">
+            <p>
+                <label for="title">求人タイトル:</label>
+                <input type="text" id="title" name="title" th:value="${jobPosting.title}" required>
+            </p>
+            <p>
+                <label for="description">求人説明:</label>
+                <textarea id="description" name="description" rows="5" th:text="${jobPosting.description}"></textarea>
+            </p>
+            <p>
+                <label for="area">勤務地:</label>
+                <input type="text" id="area" name="area" th:value="${jobPosting.area}">
+            </p>
+            <p>
+                <label for="salary">給与:</label>
+                <input type="number" id="salary" name="salary" th:value="${jobPosting.salary}">
+            </p>
+            <p>
+                <label for="workTime">勤務時間:</label>
+                <input type="text" id="workTime" name="workTime" th:value="${jobPosting.workTime}">
+            </p>
+            <p>
+                <label for="status">ステータス:</label>
+                <select id="status" name="status" required>
+                    <option value="下書き" th:selected="${jobPosting.status == '下書き'}">下書き</option>
+                    <option value="公開" th:selected="${jobPosting.status == '公開'}">公開</option>
+                    <option value="非公開" th:selected="${jobPosting.status == '非公開'}">非公開</option>
+                </select>
+            </p>
+            <div class="button-group">
+                <button type="submit" th:text="${jobPosting.id == null ? '作成' : '更新'}"></button>
+                <a th:href="@{/nursery/job-postings}" class="button secondary">キャンセル</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

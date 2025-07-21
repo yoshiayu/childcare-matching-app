@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>保育士詳細 - 保育マッチングアプリ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>保育士詳細</h1>
+
+        <h2><span th:text="${nurse.name}"></span>さんのプロフィール</h2>
+        <p><strong>メールアドレス:</strong> <span th:text="${nurse.email}"></span></p>
+        <p><strong>希望勤務地:</strong> <span th:text="${nurse.desiredArea}"></span></p>
+        <p><strong>希望給与:</strong> <span th:text="${nurse.desiredSalary}"></span>円</p>
+        <p><strong>希望勤務時間:</strong> <span th:text="${nurse.desiredWorkTime}"></span></p>
+
+        <h2>面談申し込み</h2>
+        <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></div>
+        <form th:action="@{/nursery/interviews/request}" method="post">
+            <input type="hidden" name="userId" th:value="${nurse.id}">
+            <p>
+                <label for="interviewDate">面談希望日:</label>
+                <input type="date" id="interviewDate" name="interviewDate" required>
+            </p>
+            <p>
+                <label for="message">メッセージ (任意):</label>
+                <textarea id="message" name="message" rows="5"></textarea>
+            </p>
+            <div class="button-group">
+                <button type="submit">面談を申し込む</button>
+            </div>
+        </form>
+
+        <div class="button-group">
+            <a th:href="@{/nursery/nurses}" class="button secondary">保育士一覧に戻る</a>
+        </div>
+    </div>
+</body>
+</html>

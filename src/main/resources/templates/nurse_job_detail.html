@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>求人詳細 - 保育マッチングアプリ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>求人詳細</h1>
+
+        <h2><span th:text="${jobPosting.title}"></span></h2>
+        <p><strong>園名:</strong> <span th:text="${jobPosting.nursery.name}"></span></p>
+        <p><strong>保育方針:</strong> <span th:text="${jobPosting.nursery.philosophy}"></span></p>
+        <p><strong>勤務地:</strong> <span th:text="${jobPosting.area}"></span></p>
+        <p><strong>勤務時間:</strong> <span th:text="${jobPosting.workTime}"></span></p>
+        <p><strong>給与:</strong> <span th:text="${jobPosting.salary}"></span>円</p>
+        <p><strong>求人説明:</strong> <span th:text="${jobPosting.description}"></span></p>
+
+        <h3>保育園の場所</h3>
+        <div id="map" style="height: 400px; width: 100%;"></div>
+        <p>緯度: <span th:text="${jobPosting.nursery.latitude}"></span>, 経度: <span th:text="${jobPosting.nursery.longitude}"></span></p>
+
+        <div class="button-group">
+            <div sec:authorize="hasRole('NURSE')">
+                <form th:if="${isFavorited}" th:action="@{/nurse/job-postings/{id}/unfavorite(id=${jobPosting.id})}" method="post" style="display:inline;">
+                    <button type="submit" class="button danger">お気に入り解除</button>
+                </form>
+                <form th:unless="${isFavorited}" th:action="@{/nurse/job-postings/{id}/favorite(id=${jobPosting.id})}" method="post" style="display:inline;">
+                    <button type="submit" class="button">お気に入りに追加</button>
+                </form>
+            </div>
+            <a th:href="@{/nurse/job-postings}" class="button secondary">求人一覧に戻る</a>
+        </div>
+
+        <h2>面談申し込み</h2>
+        <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></div>
+        <form th:action="@{/nurse/interviews/request}" method="post">
+            <input type="hidden" name="nurseryId" th:value="${jobPosting.nursery.id}">
+            <p>
+                <label for="interviewDate">面談希望日:</label>
+                <input type="date" id="interviewDate" name="interviewDate" required>
+            </p>
+            <p>
+                <label for="message">メッセージ (任意):</label>
+                <textarea id="message" name="message" rows="5"></textarea>
+            </p>
+            <div class="button-group">
+                <button type="submit">面談を申し込む</button>
+            </div>
+        </form>
+    </div>
+
+    <script th:inline="javascript">
+        const latitude = parseFloat(/*[[${jobPosting.nursery.latitude}]]*/ 0);
+        const longitude = parseFloat(/*[[${jobPosting.nursery.longitude}]]*/ 0);
+        const googleMapsApiKey = "[[${@environment.getProperty('google.maps.api.key')}]"; // Get API key from Spring Environment
+
+        function initMap() {
+            if (latitude && longitude && googleMapsApiKey !== 'YOUR_GOOGLE_MAPS_API_KEY') {
+                const mapOptions = {
+                    zoom: 15,
+                    center: { lat: latitude, lng: longitude }
+                };
+                const map = new google.maps.Map(document.getElementById('map'), mapOptions);
+                new google.maps.Marker({
+                    position: { lat: latitude, lng: longitude },
+                    map: map,
+                    title: /*[[${jobPosting.nursery.name}]]*/ 'Nursery Location'
+                });
+            } else {
+                document.getElementById('map').innerText = '地図情報を表示できません。Google Maps APIキーが設定されていないか、緯度経度情報が不正です。';
+            }
+        }
+
+        // Dynamically load Google Maps API script
+        if (googleMapsApiKey && googleMapsApiKey !== 'YOUR_GOOGLE_MAPS_API_KEY') {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&callback=initMap`;
+            script.async = true;
+            script.defer = true;
+            document.head.appendChild(script);
+        } else {
+            document.getElementById('map').innerText = 'Google Maps APIキーが設定されていません。';
+        }
+    </script>
+</body>
+</html>

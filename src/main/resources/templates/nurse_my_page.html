@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>保育士マイページ - 保育マッチングアプリ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>保育士マイページ</h1>
+        <p>ようこそ、<span th:text="${user.name}"></span>さん！</p>
+
+        <div th:if="${successMessage}" class="success-message" th:text="${successMessage}"></div>
+
+        <h2>プロフィール情報</h2>
+        <p><strong>氏名:</strong> <span th:text="${user.name}"></span></p>
+        <p><strong>メールアドレス:</strong> <span th:text="${user.email}"></span></p>
+        <p><strong>希望勤務地:</strong> <span th:text="${user.desiredArea}"></span></p>
+        <p><strong>希望給与:</strong> <span th:text="${user.desiredSalary}"></span>円</p>
+        <p><strong>希望勤務時間:</strong> <span th:text="${user.desiredWorkTime}"></span></p>
+
+        <div class="button-group">
+            <a th:href="@{/nurse/profile/edit}" class="button">プロフィール編集</a>
+            <a th:href="@{/dashboard}" class="button secondary">ダッシュボードに戻る</a>
+        </div>
+
+        <h2>通知設定</h2>
+        <button id="subscribeButton" class="button">プッシュ通知を有効にする</button>
+        <button id="unsubscribeButton" class="button danger">プッシュ通知を無効にする</button>
+
+    </div>
+
+    <script th:inline="javascript">
+        const subscribeButton = document.getElementById('subscribeButton');
+        const unsubscribeButton = document.getElementById('unsubscribeButton');
+        const vapidPublicKey = /*[[${@pushSubscriptionController.getVapidPublicKey()}]]*/ 'default_public_key';
+
+        function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding)
+                .replace(/\-/g, '+')
+                .replace(/_/g, '/');
+
+            const rawData = window.atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            return outputArray;
+        }
+
+        subscribeButton.addEventListener('click', async () => {
+            if (!('serviceWorker' in navigator)) {
+                console.warn('Service Worker not supported');
+                return;
+            }
+            if (!('PushManager' in window)) {
+                console.warn('Push API not supported');
+                return;
+            }
+
+            const registration = await navigator.serviceWorker.register('/service-worker.js');
+            const subscription = await registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
+            });
+
+            // Send subscription to backend
+            fetch('/push-subscriptions/subscribe', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').content // Assuming CSRF token is available
+                },
+                body: `endpoint=${subscription.endpoint}&p256dh=${btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('p256dh'))))}&auth=${btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('auth'))))}`
+            }).then(response => {
+                if (response.ok) {
+                    alert('プッシュ通知を有効にしました！');
+                } else {
+                    alert('プッシュ通知の有効化に失敗しました。');
+                }
+            });
+        });
+
+        unsubscribeButton.addEventListener('click', async () => {
+            const registration = await navigator.serviceWorker.ready;
+            const subscription = await registration.pushManager.getSubscription();
+
+            if (subscription) {
+                await subscription.unsubscribe();
+
+                // Send unsubscription to backend
+                fetch('/push-subscriptions/unsubscribe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').content
+                    },
+                    body: `endpoint=${subscription.endpoint}`
+                }).then(response => {
+                    if (response.ok) {
+                        alert('プッシュ通知を無効にしました。');
+                    } else {
+                        alert('プッシュ通知の無効化に失敗しました。');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

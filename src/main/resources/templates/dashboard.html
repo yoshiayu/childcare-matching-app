@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>ダッシュボード - 保育マッチングアプリ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>ダッシュボード</h1>
+        <p>ようこそ、<span sec:authentication="name"></span>さん！</p>
+
+        <div sec:authorize="hasRole('NURSE')">
+            <p>あなたは保育士です。</p>
+            <div class="main-nav">
+                <a th:href="@{/nurse/my-page}" class="button">マイページ</a>
+                <a th:href="@{/nurse/job-postings}" class="button">求人検索</a>
+                <a th:href="@{/nurse/interviews}" class="button">面談依頼一覧</a>
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="button secondary">ログアウト</button>
+                </form>
+            </div>
+        </div>
+
+        <div sec:authorize="hasRole('NURSERY')">
+            <p>あなたは保育園です。</p>
+            <div class="main-nav">
+                <a th:href="@{/nursery/my-page}" class="button">マイページ</a>
+                <a th:href="@{/nursery/job-postings}" class="button">求人管理</a>
+                <a th:href="@{/nursery/nurses}" class="button">保育士検索</a>
+                <a th:href="@{/nursery/interviews}" class="button">面談依頼管理</a>
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="button secondary">ログアウト</button>
+                </form>
+            </div>
+        </div>
+
+        <div sec:authorize="hasRole('ADMIN')">
+            <p>あなたは管理者です。</p>
+            <div class="main-nav">
+                <a th:href="@{/admin/dashboard}" class="button">管理者ダッシュボード</a>
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="button secondary">ログアウト</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

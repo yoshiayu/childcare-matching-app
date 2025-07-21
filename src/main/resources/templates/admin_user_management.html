@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>管理者: ユーザー管理 - 保育マッチングアプリ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>管理者: ユーザー管理</h1>
+        <p>システム内のユーザー（保育士、保育園）を管理します。</p>
+
+        <div th:if="${successMessage}" class="success-message" th:text="${successMessage}"></div>
+
+        <h2>保育士ユーザー</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>氏名</th>
+                    <th>メールアドレス</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.name}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td>
+                        <form th:action="@{/admin/users/{id}/toggle-status(id=${user.id})}" method="post" style="display:inline;">
+                            <button type="submit" class="button" th:classappend="${user.role == 'DISABLED' ? 'secondary' : 'danger'}" th:text="${user.role == 'DISABLED' ? '有効化' : '無効化'}" onclick="return confirm('本当にこのユーザーを' + (${user.role == 'DISABLED'} ? '有効' : '無効') + 'にしますか？');"></button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(users)}">
+                    <td colspan="4">保育士ユーザーがいません。</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>保育園ユーザー</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>園名</th>
+                    <th>メールアドレス</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="nursery : ${nurseries}">
+                    <td th:text="${nursery.id}"></td>
+                    <td th:text="${nursery.name}"></td>
+                    <td th:text="${nursery.email}"></td>
+                    <td>
+                        <form th:action="@{/admin/nurseries/{id}/toggle-status(id=${nursery.id})}" method="post" style="display:inline;">
+                            <button type="submit" class="button" th:classappend="${nursery.status == 'DISABLED' ? 'secondary' : 'danger'}" th:text="${nursery.status == 'DISABLED' ? '有効化' : '無効化'}" onclick="return confirm('本当にこの保育園を' + (${nursery.status == 'DISABLED'} ? '有効' : '無効') + 'にしますか？');"></button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(nurseries)}">
+                    <td colspan="4">保育園ユーザーがいません。</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="button-group">
+            <a th:href="@{/admin/dashboard}" class="button secondary">管理者ダッシュボードに戻る</a>
+        </div>
+    </div>
+</body>
+</html>

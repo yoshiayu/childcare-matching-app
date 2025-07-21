@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>保育園新規登録 - 保育マッチングアプリ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>保育園新規登録</h1>
+        <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></div>
+        <form th:action="@{/register/nursery}" method="post">
+            <p>
+                <label for="name">園名:</label>
+                <input type="text" id="name" name="name" required>
+            </p>
+            <p>
+                <label for="email">メールアドレス:</label>
+                <input type="email" id="email" name="email" required>
+            </p>
+            <p>
+                <label for="password">パスワード:</label>
+                <input type="password" id="password" name="password" required>
+            </p>
+            <p>
+                <label for="address">所在地:</label>
+                <input type="text" id="address" name="address">
+            </p>
+            <p>
+                <label for="philosophy">保育方針:</label>
+                <textarea id="philosophy" name="philosophy" rows="5"></textarea>
+            </p>
+            <div class="button-group">
+                <button type="submit">登録</button>
+                <a th:href="@{/login}" class="button secondary">ログイン画面に戻る</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
