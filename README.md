@@ -198,8 +198,8 @@ Pull Request・Issueは大歓迎です！
 
 ## 📬 連絡先
 
-- 作者: [Your Name or Team]
-- お問い合わせ: [your.email@example.com]
+- 作者: [吉永　歩]
+- お問い合わせ: [yay2024@llc-yay.com]
 - [GitHub Issues](https://github.com/your-repo/issues) からもご連絡ください
 
 --- 
