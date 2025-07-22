@@ -200,6 +200,6 @@ Pull Request・Issueは大歓迎です！
 
 - 作者: [吉永　歩]
 - お問い合わせ: [yay2024@llc-yay.com]
-- [GitHub Issues](https://github.com/your-repo/issues) からもご連絡ください
+- [GitHub Issues](https://github.com/yoshiayu/childcare-matching-app/issues) からもご連絡ください
 
 --- 
